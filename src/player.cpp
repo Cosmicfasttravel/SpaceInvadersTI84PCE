@@ -1,6 +1,8 @@
 ﻿#include "player.h"
-
 #include "../../include/graphx.h"
+
+struct player player;
+
 void init_player() {
     player.x = 160;
     player.y = 200;
