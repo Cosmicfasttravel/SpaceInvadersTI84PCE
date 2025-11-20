@@ -2,8 +2,20 @@
 #define PROJECTILE_H
 #include "../../include/stdint.h"
 #define MAX_PLAYER_PROJECTILE 2
-#define MAX_ENEMY_PROJECTILES 20
-
+#define MAX_ENEMY_PROJECTILES 50
+struct projectile {
+    uint16_t x;
+    uint8_t y;
+    int8_t xDir;
+    int8_t yDir;
+    uint8_t w = 1;
+    uint8_t h = 4;
+    uint16_t pPrevX;
+    uint8_t pPrevY;
+    bool active;
+};
+extern projectile playerProjectiles[MAX_PLAYER_PROJECTILE];
+extern projectile enemyProjectiles[MAX_ENEMY_PROJECTILES];
 
 
 void init_player_projectile(uint16_t x, uint8_t y, int8_t dir);

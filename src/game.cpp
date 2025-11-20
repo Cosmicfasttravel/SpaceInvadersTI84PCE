@@ -7,7 +7,8 @@
 
 void game_loop() {
     for (int i = 0; i < MAX_ENEMIES; i++) {
-        spawn_enemy(randInt(5,315), randInt(5,200), 3, randInt(-1,1), ALIEN);
+        spawn_enemy(randInt(5,315), randInt(5,200), 3, randInt(1,1), ALIEN);
+        spawn_enemy(randInt(5,315), randInt(5,200), 3, 0, TURRET);
     }
 
 

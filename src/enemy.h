@@ -1,9 +1,10 @@
 ﻿#ifndef ENEMY_H
 #define ENEMY_H
-#define MAX_ENEMIES 10
+#define MAX_ENEMIES 20
 #include "../../include/stdint.h"
 enum enemyType {
     ALIEN,
+    TURRET,
 };
 void spawn_enemy(uint16_t x, uint8_t y, uint8_t hp, int8_t dir, enemyType type);
 void update_enemy();
