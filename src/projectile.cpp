@@ -2,46 +2,97 @@
 #include "player.h"
 #include "../../include/graphx.h"
 
-struct projectile projectiles[MAX_PROJECTILE];
+struct projectile {
+    uint16_t x;
+    uint8_t y;
+    int8_t xDir;
+    int8_t yDir;
+    uint8_t w = 1;
+    uint8_t h = 4;
+    uint16_t pPrevX;
+    uint8_t pPrevY;
+    bool active;
+} playerProjectiles[MAX_PLAYER_PROJECTILE], enemyProjectiles[MAX_ENEMY_PROJECTILES];
 
-void shoot(uint16_t x, uint8_t y, int8_t dir) {
-    for (auto i = 0; i < MAX_PROJECTILE; i++) {
-        if (projectiles[i].active) continue;
-        projectiles[i].active = true;
-        projectiles[i].x = x;
-        projectiles[i].y = y;
-        projectiles[i].yDir = dir;
+void init_player_projectile(uint16_t x, uint8_t y, int8_t dir) {
+    for (auto i = 0; i < MAX_PLAYER_PROJECTILE; i++) {
+        if (playerProjectiles[i].active) continue;
+        playerProjectiles[i].active = true;
+        playerProjectiles[i].x = x;
+        playerProjectiles[i].y = y;
+        playerProjectiles[i].yDir = dir;
         return;
     }
 }
 
-void update_projectiles() {
-    for (auto i = 0; i < MAX_PROJECTILE; i++) {
-        if (!projectiles[i].active) continue;
-        projectiles[i].prevX = projectiles[i].x;
-        projectiles[i].prevY = projectiles[i].y;
-        projectiles[i].x += projectiles[i].xDir;
-        projectiles[i].y += projectiles[i].yDir;
+void init_enemy_projectile(uint16_t x, uint8_t y, int8_t dir) {
+    for (auto i = 0; i < MAX_ENEMY_PROJECTILES; i++) {
+        if (enemyProjectiles[i].active) continue;
+        enemyProjectiles[i].active = true;
+        enemyProjectiles[i].x = x;
+        enemyProjectiles[i].y = y;
+        enemyProjectiles[i].yDir = dir;
+        return;
     }
 }
 
-void draw_projectiles() {
-    gfx_SetColor(255);
-    for (auto i = 0; i < MAX_PROJECTILE; i++) {
-        if (projectiles[i].y <= 1) projectiles[i].active = false;
-        if (!projectiles[i].active) continue;
-        gfx_FillCircle(projectiles[i].x, projectiles[i].y, projectiles[i].w);
+void update_player_projectiles() {
+    for (auto i = 0; i < MAX_PLAYER_PROJECTILE; i++) {
+        if (!playerProjectiles[i].active) continue;
+        playerProjectiles[i].pPrevX = playerProjectiles[i].x;
+        playerProjectiles[i].pPrevY = playerProjectiles[i].y;
+        playerProjectiles[i].x += playerProjectiles[i].xDir;
+        playerProjectiles[i].y += playerProjectiles[i].yDir;
+        if (playerProjectiles[i].y <= 1) playerProjectiles[i].active = false;
+    }
+}
+void update_enemy_projectiles() {
+    for (auto i = 0; i < MAX_ENEMY_PROJECTILES; i++) {
+        if (!enemyProjectiles[i].active) continue;
+        enemyProjectiles[i].pPrevX = enemyProjectiles[i].x;
+        enemyProjectiles[i].pPrevY = enemyProjectiles[i].y;
+        enemyProjectiles[i].x += enemyProjectiles[i].xDir;
+        enemyProjectiles[i].y += enemyProjectiles[i].yDir;
+        if (enemyProjectiles[i].y <= 1) enemyProjectiles[i].active = false;
     }
 }
 
-void clear_projectiles() {
+void draw_player_projectiles() {
+    gfx_SetColor(6);
+    for (auto i = 0; i < MAX_PLAYER_PROJECTILE; i++) {
+        if (!playerProjectiles[i].active) continue;
+        gfx_FillRectangle(playerProjectiles[i].x, playerProjectiles[i].y, playerProjectiles[i].w, playerProjectiles[i].h);
+    }
+}
+
+void draw_enemy_projectiles() {
+    gfx_SetColor(6);
+    for (auto i = 0; i < MAX_ENEMY_PROJECTILES; i++) {
+        if (!enemyProjectiles[i].active) continue;
+        gfx_FillRectangle(enemyProjectiles[i].x, enemyProjectiles[i].y, enemyProjectiles[i].w, enemyProjectiles[i].h);
+    }
+}
+
+void clear_player_projectiles() {
     gfx_SetColor(0);
-    for (auto i = 0; i < MAX_PROJECTILE; i++) {
-        if (!projectiles[i].active) {
-            gfx_FillCircle(projectiles[i].x, projectiles[i].y, projectiles[i].w);
+    for (auto i = 0; i < MAX_PLAYER_PROJECTILE; i++) {
+        if (!playerProjectiles[i].active){
+            gfx_FillRectangle(playerProjectiles[i].x, playerProjectiles[i].y, playerProjectiles[i].w, playerProjectiles[i].h);
             continue;
         }
-        gfx_FillCircle(projectiles[i].prevX, projectiles[i].prevY, projectiles[i].w);
+        gfx_FillRectangle(playerProjectiles[i].pPrevX, playerProjectiles[i].pPrevY, playerProjectiles[i].w, playerProjectiles[i].h);
+
+    }
+}
+
+void clear_enemy_projectiles() {
+    gfx_SetColor(0);
+    for (auto i = 0; i < MAX_ENEMY_PROJECTILES; i++) {
+        if (!enemyProjectiles[i].active){
+            gfx_FillRectangle(enemyProjectiles[i].x, enemyProjectiles[i].y, enemyProjectiles[i].w, enemyProjectiles[i].h);
+            continue;
+        }
+        gfx_FillRectangle(enemyProjectiles[i].pPrevX, enemyProjectiles[i].pPrevY, enemyProjectiles[i].w, enemyProjectiles[i].h);
 
     }
 }

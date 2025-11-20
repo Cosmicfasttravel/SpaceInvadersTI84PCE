@@ -3,7 +3,14 @@
 #include <graphx.h>
 #include <keypadc.h>
 
+#include "enemy.h"
+
 void game_loop() {
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+        spawn_enemy(randInt(5,315), randInt(5,200), 3, randInt(-1,1), ALIEN);
+    }
+
+
 
     //fps limiter
     timer_Enable(1, TIMER_32K, TIMER_0INT, TIMER_UP);
@@ -19,30 +26,36 @@ void game_loop() {
 
         //clears
         clear_player();
-        clear_projectiles();
+        clear_enemy();
+        clear_enemy_projectiles();
+        clear_player_projectiles();
 
         kb_Scan();
         uint16_t current_keys = kb_Data[7] | kb_Data[6];
 
         if (kb_Data[7] & kb_Left && player.x > 5) {
-            player.prevX = player.x;
+            player.plPrevX = player.x;
             player.x -= 3;
         }
         if (kb_Data[7] & kb_Right && player.x < 315 - player.w) {
-            player.prevX = player.x;
+            player.plPrevX = player.x;
             player.x += 3;
         }
         if ((current_keys & kb_Up) && !(prev_keys & kb_Up)) {
-            shoot(player.x + (player.w/2), player.y - 5, -1);
+            init_player_projectile(player.x + (player.w/2), player.y - 5, -2);
         }
         if (kb_Data[6] & kb_Clear){ gfx_End(); return; }
         if (player.x > 315) player.x = 315;
         if (player.x < 5) player.x = 5;
 
         //updates
-        update_projectiles();
+        update_enemy_projectiles();
+        update_enemy();
+        update_player_projectiles();
         //draws
-        draw_projectiles();
+        draw_enemy();
+        draw_enemy_projectiles();
+        draw_player_projectiles();
         draw_player();
         gfx_BlitBuffer();
 

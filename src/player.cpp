@@ -18,6 +18,6 @@ void draw_player() {
 
 void clear_player() {
     gfx_SetColor(0);
-    gfx_FillRectangle(player.prevX, player.y, player.w, player.h);
+    gfx_FillRectangle(player.plPrevX, player.y, player.w, player.h);
     gfx_SetColor(255);
 }
